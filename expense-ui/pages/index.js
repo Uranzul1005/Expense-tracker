@@ -5,17 +5,17 @@ import { GrFormNext } from "react-icons/gr";
 import { GrFormPrevious } from "react-icons/gr";
 import { AiOutlineClose } from "react-icons/ai";
 import axios from "axios";
+// import Select from "react-select";
 
 export default function Home() {
   const [transactions, setTransactions] = useState([]);
-  const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [isShowModal, setIsShowModal] = useState(false);
-  // const [transaction_type, setTransaction_type] = useState("");
-  const [description, setDescription] = useState("");
+  // const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     getTransaction();
+    // , selectCategory();
   }, []);
 
   const getTransaction = async () => {
@@ -29,44 +29,60 @@ export default function Home() {
     }
   };
 
+  // const selectCategory = async () => {
+  //   try {
+  //     await axios.get("http://localhost:3000/categories").then((response) => {
+  //       setCategories(response.data);
+  //     });
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //     alert("An error occured while creating the new articles");
+  //   }
+  // };
+
+  // const options = categories.map((category) => {
+  //   return {
+  //     value: category.id,
+  //     label: category.name,
+  //   };
+  // });
+
+  // function handleSubmit() {
+  //   console.log({ amount });
+  // }
+
   const createTransaction = async () => {
-    if (!name || !amount) {
-      alert("Please enter task");
+    if (!amount) {
+      alert("Please enter amount");
       return;
     }
     try {
       await axios.post("http://localhost:3000/transactions", {
-        name,
         amount,
-        // transaction_type,
-        description,
       });
-      setName();
       setAmount();
-      // setTransaction_type();
-      setDescription();
       getTransaction();
+      toggleModal();
     } catch (error) {
       console.error("Error:", error);
       alert("An error occured while creating the new articles");
     }
   };
 
-  const deleteTask = async (id) => {
-    if (confirm("Delete?"))
-      try {
-        await axios.delete(`http://localhost:3000/transactions/${id}`, {
-          name,
-          amount,
-          // transaction_type,
-          description,
-        });
-        getTask();
-      } catch (error) {
-        console.error("Error:", error);
-        alert("An error occured while creating the new articles");
-      }
-  };
+  // const deleteTask = async (id) => {
+  //   if (confirm("Delete?"))
+  //     try {
+  //       await axios.delete(`http://localhost:3000/transactions/${id}`, {
+  //         name,
+  //         amount,
+  //         description,
+  //       });
+  //       getTask();
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //       alert("An error occured while creating the new articles");
+  //     }
+  // };
 
   const toggleModal = () => {
     setIsShowModal(!isShowModal);
@@ -109,26 +125,8 @@ export default function Home() {
               />
             </div>
           </div>
-          <div className="mt-12 ml-6">
-            <div className="flex items-center mb-6">
-              <button className="rounded-xl bg-slate-300 p-1">
-                <GrFormPrevious />
-              </button>
-              <div className="mx-4">Last 30 days</div>
-              <button className="rounded-xl bg-slate-300 p-1">
-                <GrFormNext />
-              </button>
-            </div>
-            <div className="flex justify-between bg-white py-3 px-6 rounded-xl">
-              <div>
-                <input className="mr-4" type="checkbox" id="selectall" />
-                <label for="selectall"> Select all</label>
-              </div>
-              <div>35</div>
-            </div>
-          </div>
-          {transactions.map((transaction) => (
-            <div className="mt-12 ml-6">
+          <div className="flex-1">
+            <div className="mt-6 ml-6">
               <div className="flex items-center mb-6">
                 <button className="rounded-xl bg-slate-300 p-1">
                   <GrFormPrevious />
@@ -141,12 +139,24 @@ export default function Home() {
               <div className="flex justify-between bg-white py-3 px-6 rounded-xl">
                 <div>
                   <input className="mr-4" type="checkbox" id="selectall" />
-                  <label for="selectall">{transaction.name}</label>
+                  <label for="selectall"> Select all</label>
                 </div>
-                <div>{transaction.amount}</div>
+                <div>2</div>
               </div>
             </div>
-          ))}
+            <div className="mt-3 ml-6 font-semibold">Today</div>
+            {transactions.map((transaction) => (
+              <div key={transaction.id} className="mt-3 ml-6">
+                <div className="flex justify-between bg-white py-3 px-6 rounded-xl">
+                  <div>
+                    <input className="mr-4" type="checkbox" />
+                    <label for="selectall">Food & Drinks</label>
+                  </div>
+                  <div>{transaction.amount}</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
         <div
           id="showmodal"
@@ -154,11 +164,14 @@ export default function Home() {
             isShowModal ? "flex" : "hidden"
           }`}
         >
-          <div className=" absolute inset-0 opacity-50"></div>
+          <div
+            className="absolute inset-0 bg-black opacity-50"
+            onClick={toggleModal}
+          ></div>
           <div className="bg-white relative rounded-xl">
             <div className="flex justify-between items-center py-6 px-5">
               <div className="text-xl">Add record</div>
-              <div onClick={toggleModal}>
+              <div className="cursor-pointer" onClick={toggleModal}>
                 <AiOutlineClose />
               </div>
             </div>
@@ -183,9 +196,7 @@ export default function Home() {
                   />
                 </div>
                 <div>Category</div>
-                <select>
-                  <option></option>
-                </select>
+                {/* <Select options={options} /> */}
                 <div>DATE</div>
                 <input
                   className="bg-slate-100 py-1 px-4"
@@ -205,21 +216,22 @@ export default function Home() {
                   className="bg-slate-100 py-1 px-4"
                   type="text"
                   placeholder="Write here"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  // value={name}
+                  // onChange={(e) => setName(e.target.value)}
                 />
                 <div>Note</div>
                 <input
                   className="bg-slate-100 py-1 px-4"
                   type="text"
                   placeholder="Write here"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  // value={description}
+                  // onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
             </div>
           </div>
         </div>
+        ;
       </div>
     </main>
   );
