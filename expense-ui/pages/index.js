@@ -5,17 +5,20 @@ import { GrFormNext } from "react-icons/gr";
 import { GrFormPrevious } from "react-icons/gr";
 import { AiOutlineClose } from "react-icons/ai";
 import axios from "axios";
-// import Select from "react-select";
+import Select from "react-select";
+import { IoEyeSharp } from "react-icons/io5";
+import { FaPlus } from "react-icons/fa";
 
 export default function Home() {
   const [transactions, setTransactions] = useState([]);
   const [amount, setAmount] = useState("");
+  const [name, setName] = useState("");
   const [isShowModal, setIsShowModal] = useState(false);
-  // const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     getTransaction();
-    // , selectCategory();
+    selectCategory();
   }, []);
 
   const getTransaction = async () => {
@@ -29,23 +32,23 @@ export default function Home() {
     }
   };
 
-  // const selectCategory = async () => {
-  //   try {
-  //     await axios.get("http://localhost:3000/categories").then((response) => {
-  //       setCategories(response.data);
-  //     });
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //     alert("An error occured while creating the new articles");
-  //   }
-  // };
+  const selectCategory = async () => {
+    try {
+      await axios.get("http://localhost:3000/categories").then((response) => {
+        setCategories(response.data);
+      });
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occured while creating the new articles");
+    }
+  };
 
-  // const options = categories.map((category) => {
-  //   return {
-  //     value: category.id,
-  //     label: category.name,
-  //   };
-  // });
+  const options = categories.map((category) => {
+    return {
+      value: category.id,
+      label: category.name,
+    };
+  });
 
   // function handleSubmit() {
   //   console.log({ amount });
@@ -63,6 +66,25 @@ export default function Home() {
       setAmount();
       getTransaction();
       toggleModal();
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occured while creating the new articles");
+    }
+  };
+
+  const createCategory = async () => {
+    if (!name) {
+      alert("Please enter category's name");
+      return;
+    }
+    try {
+      await axios.post("http://localhost:3000/categories", {
+        name,
+      });
+
+      setName("");
+      selectCategory();
+      document.getElementById("my_modal_1").close();
     } catch (error) {
       console.error("Error:", error);
       alert("An error occured while creating the new articles");
@@ -89,7 +111,7 @@ export default function Home() {
   };
 
   return (
-    <main>
+    <main className="bg-slate-100">
       <header className="flex justify-between bg-white mb-6">
         <div className="flex p-2 ml-[120px] my-[16px]">
           <Logo />
@@ -123,6 +145,54 @@ export default function Home() {
                 type="text"
                 placeholder="Search"
               />
+              <div className="font-semibold mt-6 mb-4">Category</div>
+              <div className="flex flex-col gap-2 ">
+                {categories.map((category) => (
+                  <div key={category.id} className="flex gap-1 p-2">
+                    <div className="flex items-center">
+                      <IoEyeSharp />
+                    </div>
+                    <div>{category.name}</div>
+                  </div>
+                ))}
+              </div>
+              <button
+                className="rounded-2xl flex items-center gap-1 mt-2 "
+                onClick={() => {
+                  document.getElementById("my_modal_1").showModal();
+                }}
+              >
+                <FaPlus />
+                <div>Add category</div>
+              </button>
+              <dialog id="my_modal_1" className="modal">
+                <div className="modal-box">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-bold text-lg">Add category</h3>
+                    <div className="modal-action">
+                      <form method="dialog">
+                        <button className="btn">
+                          <AiOutlineClose />
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+
+                  <input
+                    className="bg-slate-100 py-1 px-4 flex items-center"
+                    type="text"
+                    placeholder="Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                  <button
+                    className="rounded-2xl bg-emerald-500 p-2 text-white my-6 gap-1"
+                    onClick={createCategory}
+                  >
+                    Add category
+                  </button>
+                </div>
+              </dialog>
             </div>
           </div>
           <div className="flex-1">
@@ -150,9 +220,9 @@ export default function Home() {
                 <div className="flex justify-between bg-white py-3 px-6 rounded-xl">
                   <div>
                     <input className="mr-4" type="checkbox" />
-                    <label for="selectall">Food & Drinks</label>
+                    <label for="selectall">{transaction.name}</label>
                   </div>
-                  <div>{transaction.amount}</div>
+                  <div className="text-green-500">{transaction.amount}</div>
                 </div>
               </div>
             ))}
@@ -196,7 +266,7 @@ export default function Home() {
                   />
                 </div>
                 <div>Category</div>
-                {/* <Select options={options} /> */}
+                <Select options={options} />
                 <div>DATE</div>
                 <input
                   className="bg-slate-100 py-1 px-4"

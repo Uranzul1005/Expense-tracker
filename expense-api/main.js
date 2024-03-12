@@ -13,6 +13,11 @@ app.use(cors());
 app.use("/transactions", transactionsRouter);
 app.use("/users", usersRouter);
 app.use("/categories", categoriesRouter);
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  res.sendStatus(204);
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

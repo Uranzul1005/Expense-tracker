@@ -4,9 +4,8 @@ const { sql } = require("../config/database");
 const { v4: uuidv4 } = require("uuid");
 
 router.get("/", async (req, res) => {
-  const categories =
-    await sql`SELECT transactions.id, amount, categories_id, categories.name categories_name FROM transactions left join categories on transactions.category_id = categories.id`;
-  res.sendStatus(204);
+  const categories = await sql`SELECT * from categories`;
+  res.json(categories);
 });
 
 router.post("/", async (req, res) => {

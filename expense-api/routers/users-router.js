@@ -3,8 +3,9 @@ const router = express.Router();
 const { sql } = require("../config/database");
 const { v4: uuidv4 } = require("uuid");
 
-router.get("/", (req, res) => {
-  res.sendStatus(204);
+router.get("/", async (req, res) => {
+  const users = await sql`SELECT * from users`;
+  res.json(users);
 });
 
 router.post("/", async (req, res) => {

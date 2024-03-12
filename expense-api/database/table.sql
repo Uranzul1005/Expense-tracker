@@ -16,7 +16,7 @@ transaction_type VARCHAR(50),
 description TEXT,
 created_at TIMESTAMP default current_timestamp, 
 updated_at TIMESTAMP default current_timestamp,
-category_id VARCHAR(21),
+category_id VARCHAR(40),
 constraint fk_category FOREIGN KEY(category_id) REFERENCES categories(id))
 
 CREATE TABLE users (id VARCHAR(21) PRIMARY KEY,
