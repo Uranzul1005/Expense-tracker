@@ -15,6 +15,7 @@ export default function Home() {
   const [name, setName] = useState("");
   const [isShowModal, setIsShowModal] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [categoryId, setCategoryId] = useState("");
 
   useEffect(() => {
     getTransaction();
@@ -62,6 +63,7 @@ export default function Home() {
     try {
       await axios.post("http://localhost:3000/transactions", {
         amount,
+        category_id: categoryId,
       });
       setAmount();
       getTransaction();
@@ -220,7 +222,7 @@ export default function Home() {
                 <div className="flex justify-between bg-white py-3 px-6 rounded-xl">
                   <div>
                     <input className="mr-4" type="checkbox" />
-                    <label for="selectall">{transaction.name}</label>
+                    <label for="selectall">{transaction.categories_name}</label>
                   </div>
                   <div className="text-green-500">{transaction.amount}</div>
                 </div>
@@ -266,7 +268,12 @@ export default function Home() {
                   />
                 </div>
                 <div>Category</div>
-                <Select options={options} />
+                <Select
+                  onChange={({ value }) => {
+                    setCategoryId(value);
+                  }}
+                  options={options}
+                />
                 <div>DATE</div>
                 <input
                   className="bg-slate-100 py-1 px-4"

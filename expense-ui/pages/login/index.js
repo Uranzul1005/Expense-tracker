@@ -1,26 +1,32 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Link from "next/link";
 
 export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async () => {
+  const usersLogin = async () => {
     if (!email) {
       alert("Please enter email and password");
       return;
     }
     try {
-      await axios.post("http://localhost:3000/login", {
-        email,
-        password,
-      });
-      setEmail();
-      setPassword();
+      await axios
+        .post("http://localhost:3000/login", {
+          email,
+          password,
+        })
+        .then(() => {
+          localStorage.setItem("login", `${email}:${password}`);
+          window.location = "/";
+        });
     } catch (error) {
       console.error("Error:", error);
-      alert("An error occured while creating the new articles");
+      alert("Email and password is incorrect");
     }
+    setEmail("");
+    setPassword("");
   };
 
   return (
@@ -47,14 +53,16 @@ export default function Home() {
         />
       </div>
       <button
-        onClick={handleSubmit}
+        onClick={usersLogin}
         className="rounded-2xl bg-blue-600 py-2 w-96 text-white mr-9 flex justify-center gap-1"
       >
         Log in
       </button>
       <div className="flex mt-10 gap-2">
         <p>Don't have account?</p>
-        <button className="text-blue-600">Sign up</button>
+        <Link className="text-blue-600" href={"http://localhost:3001/signup"}>
+          Sign up
+        </Link>
       </div>
     </div>
   );

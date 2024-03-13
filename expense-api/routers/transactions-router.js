@@ -10,11 +10,9 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { id } = req.params;
-  const { amount } = req.body;
+  const { amount, category_id } = req.body;
 
-  const response =
-    await sql`insert into transactions(id, amount) values(${uuidv4()}, ${amount})`;
+  await sql`insert into transactions(id, amount, category_id) values(${uuidv4()}, ${amount}, ${category_id})`;
 
   res.sendStatus(204);
 });
