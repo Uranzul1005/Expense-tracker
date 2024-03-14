@@ -21,7 +21,7 @@ export default function Home() {
           password,
         })
         .then(() => {
-          window.location = "./loading";
+          window.location = "/currency";
         });
     } catch (error) {
       console.error("Error:", error);
@@ -30,14 +30,18 @@ export default function Home() {
   };
 
   return (
-    <div className="flex">
-      <div>
-        <div className="flex mb-10 font-semibold text-2xl mt-72 gap-2">
+    <div className="container mx-auto flex">
+      <div className="ml-[222px]">
+        <div className="flex justify-center mb-10 font-semibold text-2xl mt-72 gap-2">
           <Logo />
           <div>Geld</div>
         </div>
-        <h2 className="mb-2 font-semibold text-2xl">Create Geld account</h2>
-        <p>Sign up below to create your Wallet account</p>
+        <h2 className="flex justify-center mb-2 font-semibold text-2xl">
+          Create Geld account
+        </h2>
+        <p className="flex justify-center">
+          Sign up below to create your Wallet account
+        </p>
         <div className="flex flex-col gap-4 mt-10 mb-4">
           <input
             className="bg-slate-100 py-1 px-4 w-96"
@@ -72,14 +76,14 @@ export default function Home() {
         >
           Sign up
         </button>
-        <div className="flex mt-10 gap-2">
-          <p>Already have account?</p>
+        <div className="flex justify-center mt-10 gap-2">
+          <p className="flex justify-center">Already have account?</p>
           <Link className="text-blue-600" href={"http://localhost:3001/login"}>
             Log in
           </Link>
         </div>
       </div>
-      <div className="bg-blue-600">hi</div>
+      <div className="w-[708px] h-[1024px] ml-[226px] bg-blue-600"></div>
     </div>
   );
 }

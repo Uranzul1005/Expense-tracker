@@ -13,17 +13,17 @@ router.post("/", async (req, res) => {
   const login = await sql`SELECT * from users where email=${email}`;
 
   if (login.length === 0) {
-    res.status(500).json({ message: "Iim hereglegch bhgui" });
+    res.status(400).json({ message: "Iim hereglegch bhgui" });
     return;
   }
 
   const user = login[0];
 
-  if (user.password === password) {
-    res.json(user);
-  } else {
-    res.status(500).json({ message: "Aldaa garlaa" });
+  if (!bcrypt.compareSync(password, user.password)) {
+    res.status(400).json({ message: "Username or password is not correct" });
+    return;
   }
+  res.status(200).json({ message: "Login success" });
 });
 
 module.exports = router;

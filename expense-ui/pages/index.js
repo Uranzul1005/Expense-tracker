@@ -16,6 +16,7 @@ export default function Home() {
   const [isShowModal, setIsShowModal] = useState(false);
   const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState("");
+  const [type, setType] = useState("EXPENSE");
 
   useEffect(() => {
     getTransaction();
@@ -62,10 +63,10 @@ export default function Home() {
     }
     try {
       await axios.post("http://localhost:3000/transactions", {
-        amount,
+        amount: type === "EXPENSE" ? -amount : amount,
         category_id: categoryId,
       });
-      setAmount();
+      setAmount("");
       getTransaction();
       toggleModal();
     } catch (error) {
@@ -111,6 +112,8 @@ export default function Home() {
   const toggleModal = () => {
     setIsShowModal(!isShowModal);
   };
+
+  console.log({ type });
 
   return (
     <main className="bg-slate-100">
@@ -224,7 +227,7 @@ export default function Home() {
                     <input className="mr-4" type="checkbox" />
                     <label for="selectall">{transaction.categories_name}</label>
                   </div>
-                  <div className="text-green-500">{transaction.amount}</div>
+                  <div>{transaction.amount}</div>
                 </div>
               </div>
             ))}
@@ -250,10 +253,18 @@ export default function Home() {
             <div className="flex">
               <div className="flex flex-col gap-5 p-6">
                 <div className=" flex justify-around text-center">
-                  <button className="rounded-2xl p-2 items-center bg-slate-100 hover:bg-blue-600 hover:text-white hover:flex-1">
+                  <button
+                    className={`rounded-2xl p-2 items-center bg-slate-100 hover:bg-blue-600 hover:text-white ${
+                      type === "EXPENSE" ? "bg-blue-600" : "bg-slate-100"
+                    }`}
+                    onClick={() => setType("EXPENSE")}
+                  >
                     Expense
                   </button>
-                  <button className="flex items-center rounded-2xl bg-slate-100 hover:bg-blue-600 hover:text-white hover:flex-1 p-2 ">
+                  <button
+                    onClick={() => setType("INCOME")}
+                    className="flex items-center rounded-2xl bg-slate-100 hover:bg-green-600 hover:text-white p-2"
+                  >
                     Income
                   </button>
                 </div>
@@ -281,7 +292,9 @@ export default function Home() {
                   placeholder="YEAR-MONTH-DAY"
                 />
                 <button
-                  className="rounded-2xl bg-blue-600 p-2 text-white my-6 flex items-center gap-1 justify-center"
+                  className={`rounded-2xl ${
+                    type === "EXPENSE" ? "bg-blue-600" : "bg-green-600"
+                  } p-2 text-white my-6 flex items-center gap-1 justify-center`}
                   onClick={createTransaction}
                 >
                   Add record
