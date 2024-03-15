@@ -20,7 +20,7 @@ export default function Home() {
         })
         .then(() => {
           localStorage.setItem("login", `${email}:${password}`);
-          window.location = "/";
+          window.location = "/dashboard";
         });
     } catch (error) {
       console.error("Error:", error);

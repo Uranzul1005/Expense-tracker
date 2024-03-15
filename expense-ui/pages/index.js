@@ -8,6 +8,7 @@ import axios from "axios";
 import Select from "react-select";
 import { IoEyeSharp } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa";
+import Link from "next/link";
 
 export default function Home() {
   const [transactions, setTransactions] = useState([]);
@@ -120,8 +121,12 @@ export default function Home() {
       <header className="flex justify-between bg-white mb-6">
         <div className="flex p-2 ml-[120px] my-[16px]">
           <Logo />
-          <div className="mx-6">Dashboard</div>
-          <div className="font-semibold">Records</div>
+          <Link href={"http://localhost:3001/dashboard"} className="mx-6">
+            Dashboard
+          </Link>
+          <Link href={"http://localhost:3001/"} className="font-semibold">
+            Records
+          </Link>
         </div>
         <div className="flex mr-[120px] my-[20px]">
           <button
