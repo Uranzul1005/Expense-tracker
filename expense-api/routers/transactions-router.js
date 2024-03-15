@@ -5,28 +5,36 @@ const { v4: uuidv4 } = require("uuid");
 
 router.get("/", async (req, res) => {
   const transactions =
-    await sql`SELECT transactions.id, amount, category_id, categories.name categories_name FROM transactions left join categories on transactions.category_id = categories.id`;
+    await sql`SELECT transactions.id, amount::money::numeric::float8, category_id, categories.name categories_name, transactions.created_at FROM transactions left join categories on transactions.category_id = categories.id`;
   res.json(transactions);
 });
 
-router.post("/", async (req, res) => {
-  const { amount, category_id } = req.body;
+router.get("/sum", async (req, res) => {
+  const incomeSum =
+    await sql`SELECT SUM(amount) from transactions where amount::money::numeric::float8 > 0`;
+  const expenseSum =
+    await sql`SELECT SUM(amount) from transactions where amount::money::numeric::float8 < 0`;
+  res.json({
+    incomeSum: incomeSum[0].sum,
+    expenseSum: expenseSum[0].sum,
+  });
+});
 
-  await sql`insert into transactions(id, amount, category_id) values(${uuidv4()}, ${amount}, ${category_id})`;
+router.post("/", async (req, res) => {
+  const { amount, category_id, created_at } = req.body;
+
+  await sql`insert into transactions(id, amount, category_id) values(${uuidv4()}, ${amount}, ${category_id}, ${created_at})`;
 
   res.sendStatus(204);
 });
 
 router.put("/:id", async (req, res) => {
-  const { id } = req.params;
   const { amount } = req.body;
   await sql`update transactions set amount = ${amount} where id = ${uuidv4()}`;
   res.sendStatus(204);
 });
 
 router.delete("/:id", async (req, res) => {
-  const { id } = req.params;
-
   await sql`delete from transactions where id = ${uuidv4()}`;
 
   res.sendStatus(204);

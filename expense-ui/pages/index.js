@@ -150,6 +150,31 @@ export default function Home() {
                 type="text"
                 placeholder="Search"
               />
+              <div className="font-semibold mt-6 mb-4">Types</div>
+              <div className="flex flex-col gap-1 ml-2">
+                {" "}
+                <div className="flex">
+                  <input className="mr-4" type="radio" />
+                  <div>All</div>
+                </div>
+                <div className="flex">
+                  <input
+                    className="mr-4"
+                    type="radio"
+                    onClick={() => setType("EXPENSE")}
+                  />
+                  <div>Income</div>
+                </div>
+                <div className="flex">
+                  <input
+                    className="mr-4"
+                    type="radio"
+                    onClick={() => setType("INCOME")}
+                  />
+                  <div>Expense</div>
+                </div>
+              </div>
+
               <div className="font-semibold mt-6 mb-4">Category</div>
               <div className="flex flex-col gap-2 ">
                 {categories.map((category) => (
@@ -184,14 +209,14 @@ export default function Home() {
                   </div>
 
                   <input
-                    className="bg-slate-100 py-1 px-4 flex items-center"
+                    className="bg-slate-100 py-1 px-4 flex items-center w-[348px]"
                     type="text"
                     placeholder="Name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
                   <button
-                    className="rounded-2xl bg-emerald-500 p-2 text-white my-6 gap-1"
+                    className="rounded-2xl bg-emerald-500 p-2 text-white my-6 gap-1 w-[348px]"
                     onClick={createCategory}
                   >
                     Add category
@@ -226,8 +251,17 @@ export default function Home() {
                   <div>
                     <input className="mr-4" type="checkbox" />
                     <label for="selectall">{transaction.categories_name}</label>
+                    <div className="ml-7">{transaction.created_at}</div>
                   </div>
-                  <div>{transaction.amount}</div>
+                  <div
+                    className={`${
+                      transaction.amount < 0
+                        ? "text-rose-600"
+                        : "text-green-600"
+                    }`}
+                  >
+                    {transaction.amount}
+                  </div>
                 </div>
               </div>
             ))}
@@ -254,7 +288,7 @@ export default function Home() {
               <div className="flex flex-col gap-5 p-6">
                 <div className=" flex justify-around text-center">
                   <button
-                    className={`rounded-2xl p-2 items-center bg-slate-100 hover:bg-blue-600 hover:text-white ${
+                    className={`rounded-2xl p-2 items-center w-[172px] bg-slate-100 hover:bg-blue-600 hover:text-white ${
                       type === "EXPENSE" ? "bg-blue-600" : "bg-slate-100"
                     }`}
                     onClick={() => setType("EXPENSE")}
@@ -263,7 +297,7 @@ export default function Home() {
                   </button>
                   <button
                     onClick={() => setType("INCOME")}
-                    className="flex items-center rounded-2xl bg-slate-100 hover:bg-green-600 hover:text-white p-2"
+                    className="flex items-center w-[172px] justify-center rounded-2xl bg-slate-100 hover:bg-green-600 hover:text-white p-2"
                   >
                     Income
                   </button>
@@ -271,7 +305,7 @@ export default function Home() {
                 <div>
                   <div>Amount</div>
                   <input
-                    className="bg-slate-100 py-1 px-4"
+                    className="bg-slate-100 py-1 px-4 w-[344px]"
                     type="text"
                     placeholder="₮ 000.00"
                     value={amount}
@@ -303,7 +337,7 @@ export default function Home() {
               <div className="flex flex-col gap-5 p-6">
                 <div>Payee</div>
                 <input
-                  className="bg-slate-100 py-1 px-4"
+                  className="bg-slate-100 py-1 px-4 w-[348px]"
                   type="text"
                   placeholder="Write here"
                   // value={name}
